@@ -3,6 +3,10 @@
 
 using namespace std;
 
+
+
+// List
+
 template<typename SomeType>
 class List
 {
@@ -26,21 +30,17 @@ private:
 	Node<SomeType>* Head;
 	Node<SomeType>* Tail;
 	int Size;
-
-	void add_first(SomeType data);
-	void pop_low();
-	void pop_top();
-	
+		
 
 public:
-	SomeType& get_low();
-	SomeType& get_top();
+	
 	List();
-	void add_on_position(int index, SomeType data);
+	void add_on_pos(int index, SomeType data);
 	void append(SomeType data);
 	void add_front(SomeType data);
 	void pop_element(int index);
-	void pop_element(Node<SomeType>* data);
+	SomeType& get_low();
+	SomeType& get_top();
 	int get_size() { return Size; };
 	SomeType& operator[](int index);
 	
@@ -56,14 +56,7 @@ List<SomeType>::List()
 };
 
 template<typename SomeType>
-void List<SomeType>::add_first(SomeType data)
-{
-	Tail = new Node<SomeType>(data);
-	Head = Tail;
-}
-
-template<typename SomeType>
-void List<SomeType>::add_on_position(int index, SomeType data) 
+void List<SomeType>::add_on_pos(int index, SomeType data) 
 {
 	if (index == 0) 
 	{
@@ -106,7 +99,8 @@ void List<SomeType>::append(SomeType data)
 {	
 	if (this->Tail == nullptr)
 	{
-		this->add_first(data);
+		Tail = new Node<SomeType>(data);
+		Head = Tail;
 	}
 	else
 	{
@@ -126,7 +120,8 @@ void List<SomeType>::add_front(SomeType data)
 {
 	if (Head == nullptr)
 	{
-		this->add_first(data);
+		Tail = new Node<SomeType>(data);
+		Head = Tail;
 	}
 	else
 	{
@@ -158,12 +153,23 @@ void List<SomeType>::pop_element(int index)
 	}
 	if (index == this->Size) 
 	{
-		this->pop_low();
+		Node<SomeType>* Current = Tail;
+		Current = Current->PreviousAddress;
+		this->Tail = Current;
+		delete Current->NextAddress;
+		Current->NextAddress = nullptr;
+		this->Size--;
 		return;
 	}
 	if (index == 0) 
 	{
-		this->pop_top();
+		Node<SomeType>* Current = Head;
+		Current = Current->NextAddress;
+		this->Head = Current;
+		delete Current->PreviousAddress;
+		Current->PreviousAddress = nullptr;
+		this->Size--;
+		return;
 	}
 	else 
 	{
@@ -194,84 +200,6 @@ void List<SomeType>::pop_element(int index)
 }
 
 template<typename SomeType>
-void List<SomeType>::pop_element(Node<SomeType>* Data)
-{
-	if (this->get_size() == 0)
-	{
-		cout << "This list has no elements!\n";
-		return;
-
-		if (this->get_size() == 1)
-		{
-			delete this->Head;
-			this->Size--;
-			return;
-		}
-	}
-	Node<SomeType>* Previous = nullptr;
-	Node<SomeType>* Current = Data;
-	Node<SomeType>* Next = nullptr;
-	Previous = Current->PreviousAddress;
-	Next = Current->NextAddress;
-	if (Previous != nullptr)
-	{
-		Previous->NextAddress = Next;
-	}
-
-	if (Next != nullptr)
-	{
-		Next->PreviousAddress = Previous;
-	};
-	delete Current;
-	Size--;
-}
-
-template<typename SomeType>
-void List<SomeType>::pop_top()
-{
-	if (this->get_size() == 0)
-	{
-		cout << "This list has no elements!\n";
-		return;
-	}
-	if (this->get_size() == 1)
-	{
-		delete this->Head;
-		this->Size--;
-		return;
-	}
-	Node<SomeType>* Current = Head;
-	Current = Current->NextAddress;
-	this->Head = Current;
-	delete Current->PreviousAddress;
-	Current->PreviousAddress = nullptr;
-	this->Size--;
-};
-
-template<typename SomeType>
-void List<SomeType>::pop_low()
-{
-	if (this->get_size() == 0)
-	{
-		cout << "This list has no elements!\n";
-		return;
-	}
-	if (this->get_size() == 1)
-	{
-		delete this->Tail;
-		this->Size--;
-		return;
-
-	}
-	Node<SomeType>* Current = Tail;
-	Current = Current->PreviousAddress;
-	this->Tail = Current;
-	delete Current->NextAddress;
-	Current->NextAddress = nullptr;
-	this->Size--;
-};
-
-template<typename SomeType>
 SomeType& List<SomeType>::get_low()
 {
 	return this->Tail->data;
@@ -288,14 +216,14 @@ SomeType& List<SomeType>::operator[](int index)
 {
 	if (index == 0)
 	{
-		return this->get_top();
+		return this->Head->data;
 
 	}
 	else
 	{
 		if (index == this->Size - 1)
 		{
-			return this->get_low();
+			return this->Tail->data;
 		}
 		else
 		{
@@ -326,34 +254,82 @@ List<SomeType>& Copy(List<SomeType>* OldList)
 }
 
 
-template<typename SomeType>
-class Matrix
+
+// Matrix
+
+
+class CCS_Matrix
 {
 public:
-	List<SomeType> Data;
+	List<int> Data;
+	List<int> LI;
+	List<int> LJ;
 	int Size;
 
-	Matrix();
-	
-
-
-	
-	
+	CCS_Matrix();
+	void Input(List<int> InputList, int Size);
+	int get(int i, int j);
 	
 };
 
-template<typename SomeType>
-Matrix<SomeType>::Matrix()
+CCS_Matrix::CCS_Matrix()
 {
-	Data;
 	Size = 0;
-
 };
+
+
+void CCS_Matrix::Input(List<int> InputList, int Size) 
+{
+	int Column_Index = 0;
+	int current_stroke = 0;
+	int column_start = 0;
+	
+	for (int column = 0; column < Size; column++) 
+	{
+		LJ.append(Column_Index);
+		for (int number = column; number < InputList.get_size(); number = number + Size) 
+		{
+			
+			if (InputList[number] != 0) 
+			{
+				Data.append(InputList[number]);
+				LI.append(current_stroke);
+				Column_Index++;
+			}
+			current_stroke++;
+		}
+		current_stroke = 0;
+		
+	}
+	LJ.append(Column_Index);
+};
+
+
+
+int CCS_Matrix::get(int k, int m) 
+{
+	int AA = 0;
+	int i = k - 1;
+	int j = m - 1;
+	int N1 = LJ[j];
+	int N2 = LJ[j + 1];
+	for (int counter = N1; counter < N2; counter++) 
+	{
+		if (LI[counter] == i) 
+		{
+			AA = this->Data[counter];
+			break;
+		}
+	}
+	return AA;
+}
+
+
 
 int main()
 {
 	int size;
-	cout << "Enter your matrix size: ";
+	cout << "Enter your matrix size (x*x) : ";
 	cin >> size;
 
 	List<int> DataList;
@@ -361,9 +337,9 @@ int main()
 	cout << "Input Your Data:" << endl;
 
 	char buffer;
-	for (int i = 0; i < size; i++) 
+	for (int i = 0; i < size; i++)
 	{
-		for (int j = 0; j < size; j++) 
+		for (int j = 0; j < size; j++)
 		{
 			cin >> buffer;
 			DataList.append((int)buffer - 48);
@@ -371,36 +347,59 @@ int main()
 		cout << endl;
 	}
 
-	
+	cout << "Your DataList:" << endl;
 
-	
-	Matrix<int> NewMa;
-	NewMa.Data = DataList;
-	
-	cout << "Your DataList: ";
-	for (int i = 0; i < size*size; i++) 
+
+	for (int i = 0; i < DataList.get_size(); i++)
 	{
-		cout << NewMa.Data[i] << ' ';
+		cout << DataList[i];
 	}
 
+	CCS_Matrix NewMa;
+	NewMa.Input(DataList, size);
+
+	cout << endl;
+
+	for (int i = 0; i < NewMa.Data.get_size(); i++)
+	{
+		cout << NewMa.Data[i];
+	}
+
+	cout << endl;
+
+	for (int i = 0; i < NewMa.LI.get_size(); i++)
+	{
+		cout << NewMa.LI[i];
+	}
+
+	cout << endl;
+
+	for (int i = 0; i < NewMa.LJ.get_size(); i++)
+	{
+		cout << NewMa.LJ[i] << ' ';
+	}
+
+	cout << endl;
+	cout << endl;
+
+	for (int i = 1; i <= size; i++) 
+	{
+		for (int j = 1; j <= size; j++) 
+		{
+			cout << NewMa.get(i, j) << ' ';
+		}
+		cout << endl;
+	}
+	
+
+	
+	
 
 
 
 
 
-
-
-
-
-
-	/*List<int>* firstRow = new List<int>;
-	firstRow->append(13);
-	List<List<int>*> Matrix;
-	Matrix.append(firstRow);
-	int c = 13;
-
-	cout << Matrix[0]->get_top();
-	*/
+	
 
 
 

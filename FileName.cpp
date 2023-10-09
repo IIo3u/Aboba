@@ -412,6 +412,16 @@ void CCS_Matrix::set(int i, int j, int data)
 {
 	int N1 = LJ[j - 1];
 	int N2 = LJ[j];
+	if (N1 == N2) 
+	{
+		Data.add_on_pos_right(N2 - 1, data);
+		LI.add_on_pos_right(N2 - 1, i);
+		for (int column = j; column < LJ.get_size(); column++)
+		{
+			LJ[column] += 1;
+		}
+		return;
+	}
 	bool flag = false;
 	for (int counter = N1; counter < N2; counter ++) 
 	{
@@ -424,6 +434,24 @@ void CCS_Matrix::set(int i, int j, int data)
 	}
 	if (flag == false) 
 	{
+		if (i == this->Size && j == this->Size) 
+		{
+			return;
+		}
+		/*if (j == this->Size) 
+		{
+			for (int counter = LJ[j-1]; counter < LJ[j]; counter++) 
+			{
+					if (LI[counter] )
+			}
+		}*/
+		/*else 
+		{
+			if (i == this->Size - 1 && j == this->Size) 
+			{
+
+			}
+		}*/
 		for (int counter = N1; counter < N2; counter ++) 
 		{
 			if (LI[counter] > i) 
@@ -516,12 +544,17 @@ int main()
 	{
 		for (int j = 1; j < size + 1; j++) 
 		{
-			NewMa.set(i, j, 3);
+			if (i == size && j == size) 
+			{
+				continue;
+			}
+			else 
+			{
+				NewMa.set(i, j, 3);
+			}
 		}
 	}
 	
-	
-	cout << endl;
 	cout << endl;
 	
 	cout << "Output Matrix:" << endl;
@@ -535,7 +568,24 @@ int main()
 	}
 
 	
-	
+	for (int i = 0; i < NewMa.Data.get_size(); i++)
+	{
+		cout << NewMa.Data[i];
+	}
+
+	cout << endl;
+
+	for (int i = 0; i < NewMa.LI.get_size(); i++)
+	{
+		cout << NewMa.LI[i];
+	}
+
+	cout << endl;
+
+	for (int i = 0; i < NewMa.LJ.get_size(); i++)
+	{
+		cout << NewMa.LJ[i] << ' ';
+	}
 }
 	
 	

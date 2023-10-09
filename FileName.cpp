@@ -412,7 +412,7 @@ void CCS_Matrix::set(int i, int j, int data)
 {
 	int N1 = LJ[j - 1];
 	int N2 = LJ[j];
-	if (N1 == N2) 
+	if (N1 == N2 && N2 != 0) 
 	{
 		Data.add_on_pos_right(N2 - 1, data);
 		LI.add_on_pos_right(N2 - 1, i);
@@ -465,8 +465,8 @@ void CCS_Matrix::set(int i, int j, int data)
 				return;
 			}
 		}
-		LI.add_on_pos_left(N2, i);
-		Data.add_on_pos_left(N2, data);
+		LI.add_on_pos_left(N2 - 1, i);
+		Data.add_on_pos_left(N2 - 1, data);
 		for (int column = j; column < LJ.get_size(); column++) 
 		{
 			LJ[column] += 1;
@@ -544,16 +544,13 @@ int main()
 	{
 		for (int j = 1; j < size + 1; j++) 
 		{
-			if (i == size && j == size) 
-			{
-				continue;
-			}
-			else 
-			{
+			
 				NewMa.set(i, j, 3);
-			}
+			
 		}
 	}
+	
+	
 	
 	cout << endl;
 	

@@ -352,7 +352,6 @@ public:
 	List<int> LI;
 	List<int> LJ;
 	int Size;
-	
 	CCS_Matrix();
 	void Input(List<int> InputList, int Size);
 	int get(int i, int j);
@@ -372,7 +371,8 @@ void CCS_Matrix::Input(List<int> InputList, int Size)
 	int Column_Index = 0;
 	int current_stroke = 1;
 	int column_start = 0;
-	
+	this->Size = Size;
+
 	for (int column = 0; column < Size; column++) 
 	{
 		LJ.append(Column_Index);
@@ -492,7 +492,44 @@ void CCS_Matrix::set(int i, int j, int data)
 
 void CCS_Matrix::Shift()
 {
+	int N1 = this->LJ[this->LJ.get_size() - 2];
+	int N2 = this->LJ[this->LJ.get_size() - 1];
+	int Data_buffer;
+	int LI_buffer;
+	for (int counter = N2 - 1; counter >= N1; counter--) 
+	{
+		Data_buffer = this->Data.get_low();
+		this->Data.add_front(Data_buffer);
+		this->Data.pop_low();
+
+		LI_buffer = this->LI.get_low();
+		
+		if (LI_buffer == this->Size) 
+		{
+			this->LI.add_front(1);
+		}
+		else
+		{
+			this->LI.add_front(LI_buffer + 1);
+		}
+		this->LI.pop_low();
+	}
+	int differences_buffer;
+	List<int> differences;
+	for (int column = this->Size; column > 0; column--) 
+	{
+		differences.add_front(this->LJ[column] - this->LJ[column - 1]);
+		this->LJ.pop_low();
+	}
 	
+	differences_buffer = differences.get_low();
+	differences.pop_low();
+	differences.add_front(differences_buffer);
+
+	for (int counter = 0; counter < differences.get_size(); counter++) 
+	{
+		this->LJ.append(this->LJ.get_low() + differences[counter]);
+	}
 }
 
 int main()
@@ -560,8 +597,7 @@ int main()
 	}
 
 	
-	NewMa.set(1, 1, 13);
-	NewMa.set(1, 1, 0);
+	
 
 	NewMa.Shift();
 

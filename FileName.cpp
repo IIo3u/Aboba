@@ -346,13 +346,13 @@ List<SomeType>& Copy(List<SomeType>* OldList)
 class CCS_Matrix
 {
 private:
-	
-public:
-	
 	List<int> Data;
 	List<int> LI;
 	List<int> LJ;
 	int Size;
+public:
+	
+	
 	CCS_Matrix();
 	void Input(List<int> InputList, int Size);
 	int get(int i, int j);
@@ -471,7 +471,7 @@ void CCS_Matrix::Shift()
 
 int main()
 {
-	
+
 
 	int size;
 	cout << "Enter your matrix size (x*x) : ";
@@ -504,61 +504,32 @@ int main()
 	NewMa.Input(DataList, size);
 
 	cout << endl;
-	
 
-	for (int i = 0; i < NewMa.Data.get_size(); i++)
+
+	for (int i = 1; i <= size; i++)
 	{
-		cout << NewMa.Data[i];
+		for (int j = 1; j <= size; j++)
+		{
+			NewMa.set(i,j, 3);
+		}
+		cout << endl;
 	}
 
-	cout << endl;
-
-	for (int i = 0; i < NewMa.LI.get_size(); i++)
-	{
-		cout << NewMa.LI[i];
-	}
-
-	cout << endl;
-
-	for (int i = 0; i < NewMa.LJ.get_size(); i++)
-	{
-		cout << NewMa.LJ[i] << ' ';
-	}
-	
 	NewMa.Shift();
-	
-	
+
+
 	cout << endl;
-	
+
 	cout << "Output Matrix:" << endl;
-	for (int i = 1; i <= size; i++) 
+	for (int i = 1; i <= size; i++)
 	{
-		for (int j = 1; j <= size; j++) 
+		for (int j = 1; j <= size; j++)
 		{
 			cout << NewMa.get(i, j) << ' ';
 		}
 		cout << endl;
 	}
 
-	
-	for (int i = 0; i < NewMa.Data.get_size(); i++)
-	{
-		cout << NewMa.Data[i];
-	}
 
-	cout << endl;
-
-	for (int i = 0; i < NewMa.LI.get_size(); i++)
-	{
-		cout << NewMa.LI[i];
-	}
-
-	cout << endl;
-
-	for (int i = 0; i < NewMa.LJ.get_size(); i++)
-	{
-		cout << NewMa.LJ[i] << ' ';
-	}
 }
-	
 	

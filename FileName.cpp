@@ -346,12 +346,12 @@ List<SomeType>& Copy(List<SomeType>* OldList)
 class CCS_Matrix
 {
 private:
+	
+public:
 	List<int> Data;
 	List<int> LI;
 	List<int> LJ;
 	int Size;
-public:
-	
 	
 	CCS_Matrix();
 	void Input(List<int> InputList, int Size);
@@ -411,10 +411,35 @@ int CCS_Matrix::get(int i, int j)
 	return AA;
 }
 
-void CCS_Matrix::set(int i, int j, int data) 
+void CCS_Matrix::set(int i, int j, int data)
 {
 	int N1 = LJ[j - 1];
 	int N2 = LJ[j];
+	bool flag;
+	if (data == 0)
+	{
+		for (int counter = N1; counter < N2; counter++)
+		{
+			if (N1 == N2) 
+			{
+				return;
+			}
+			if (LI[counter] == i) 
+			{
+				this->Data.pop_element(counter);
+				this->LI.pop_element(counter);
+				for (int column = j; column < LJ.get_size(); column++)
+				{				
+					if (LJ[column] > 0)
+					{
+						LJ[column] -= 1;
+					}					
+				}
+				return;					
+			}			
+		}	
+		
+	}
 	if (N1 == N2 && N2 != 0) 
 	{
 		Data.add_on_pos_right(N2 - 1, data);
@@ -425,7 +450,7 @@ void CCS_Matrix::set(int i, int j, int data)
 		}
 		return;
 	}
-	bool flag = false;
+	flag = false;
 	for (int counter = N1; counter < N2; counter ++) 
 	{
 		if (LI[counter] == i) 
@@ -439,6 +464,12 @@ void CCS_Matrix::set(int i, int j, int data)
 	{
 		if (i == this->Size && j == this->Size) 
 		{
+			LI.add_on_pos_left(N2 - 1, i);
+			Data.add_on_pos_left(N2 - 1, data);
+			for (int column = j; column < LJ.get_size(); column++) 
+			{
+				LJ[column] += 1;
+			}
 			return;
 		}
 		for (int counter = N1; counter < N2; counter ++) 
@@ -454,12 +485,7 @@ void CCS_Matrix::set(int i, int j, int data)
 				return;
 			}
 		}
-		LI.add_on_pos_left(N2 - 1, i);
-		Data.add_on_pos_left(N2 - 1, data);
-		for (int column = j; column < LJ.get_size(); column++) 
-		{
-			LJ[column] += 1;
-		}
+		
 	}
 	
 }
@@ -505,19 +531,22 @@ int main()
 
 	cout << endl;
 
-
-	for (int i = 1; i <= size; i++)
+	for (int counter = 0; counter < NewMa.Data.get_size(); counter++)
 	{
-		for (int j = 1; j <= size; j++)
-		{
-			NewMa.set(i,j, 3);
-		}
-		cout << endl;
+		cout << NewMa.Data[counter];
 	}
+	cout << endl;
 
-	NewMa.Shift();
+	for (int counter = 0; counter < NewMa.LI.get_size(); counter++)
+	{
+		cout << NewMa.LI[counter];
+	}
+	cout << endl;
 
-
+	for (int counter = 0; counter < NewMa.LJ.get_size(); counter++)
+	{
+		cout << NewMa.LJ[counter];
+	}
 	cout << endl;
 
 	cout << "Output Matrix:" << endl;
@@ -530,6 +559,42 @@ int main()
 		cout << endl;
 	}
 
+	
+	NewMa.set(1, 1, 13);
+	NewMa.set(1, 1, 0);
 
+	NewMa.Shift();
+
+
+	cout << endl;
+
+	for (int counter = 0; counter < NewMa.Data.get_size(); counter++ ) 
+	{
+		cout << NewMa.Data[counter];
+	}
+	cout << endl;
+
+	for (int counter = 0; counter < NewMa.LI.get_size(); counter++)
+	{
+		cout << NewMa.LI[counter];
+	}
+	cout << endl;
+
+	for (int counter = 0; counter < NewMa.LJ.get_size(); counter++)
+	{
+		cout << NewMa.LJ[counter];
+	}
+	cout << endl;
+	cout << "Output Matrix:" << endl;
+	for (int i = 1; i <= size; i++)
+	{
+		for (int j = 1; j <= size; j++)
+		{
+			cout << NewMa.get(i, j) << ' ';
+		}
+		cout << endl;
+	}
+
+	
 }
 	

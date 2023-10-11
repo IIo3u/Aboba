@@ -30,12 +30,12 @@ private:
 	Node<SomeType>* Head;
 	Node<SomeType>* Tail;
 	int Size;
-		
+	void add_first(SomeType data);	
 
 public:
 	
 	List();
-	void add_first(SomeType data);
+	
 	void add_on_pos_right(int index, SomeType data);
 	void add_on_pos_left(int index, SomeType data);
 	void append(SomeType data);
@@ -345,16 +345,19 @@ List<SomeType>& Copy(List<SomeType>* OldList)
 
 class CCS_Matrix
 {
+private:
+	
 public:
+	
 	List<int> Data;
 	List<int> LI;
 	List<int> LJ;
 	int Size;
-
 	CCS_Matrix();
 	void Input(List<int> InputList, int Size);
 	int get(int i, int j);
 	void set(int i, int j, int data);
+	int get_size() { return this->Size; }
 	void Shift();
 	
 };
@@ -438,20 +441,6 @@ void CCS_Matrix::set(int i, int j, int data)
 		{
 			return;
 		}
-		/*if (j == this->Size) 
-		{
-			for (int counter = LJ[j-1]; counter < LJ[j]; counter++) 
-			{
-					if (LI[counter] )
-			}
-		}*/
-		/*else 
-		{
-			if (i == this->Size - 1 && j == this->Size) 
-			{
-
-			}
-		}*/
 		for (int counter = N1; counter < N2; counter ++) 
 		{
 			if (LI[counter] > i) 
@@ -475,13 +464,10 @@ void CCS_Matrix::set(int i, int j, int data)
 	
 }
 
-void CCS_Matrix::Shift() 
+void CCS_Matrix::Shift()
 {
 	
-
 }
-
-
 
 int main()
 {
@@ -539,17 +525,7 @@ int main()
 		cout << NewMa.LJ[i] << ' ';
 	}
 	
-	
-	for (int i = 1; i < size + 1; i++ ) 
-	{
-		for (int j = 1; j < size + 1; j++) 
-		{
-			
-				NewMa.set(i, j, 3);
-			
-		}
-	}
-	
+	NewMa.Shift();
 	
 	
 	cout << endl;

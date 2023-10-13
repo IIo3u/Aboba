@@ -14,9 +14,9 @@ private:
 	template<typename SomeType>
 	class Node
 	{
-	public:
-		Node* PreviousAddress;
-		Node* NextAddress;
+	public:						// Если выложить все ячейки по адресам слева на право, то:
+		Node* PreviousAddress;  // Это ссылка влево (т.е. ведёт в начало списка)
+		Node* NextAddress;		// Это ссылка вправо (т.е. ведёт в конец списка)
 		SomeType data;
 
 		Node(SomeType data = SomeType())
@@ -27,29 +27,30 @@ private:
 	};
 
 	
-	Node<SomeType>* Head;
-	Node<SomeType>* Tail;
+	Node<SomeType>* Head;	// Начало
+	Node<SomeType>* Tail; // Конец
 	int Size;
-	void add_first(SomeType data);	
+	void add_first(SomeType data);	// Инициализирует добавление первого элемента
 
 public:
 	
 	List();
 	
-	void add_on_pos_right(int index, SomeType data);
-	void add_on_pos_left(int index, SomeType data);
-	void append(SomeType data);
-	void add_front(SomeType data);
-	void pop_element(int index);
-	void pop_top();
-	void pop_low();
-	SomeType& get_low();
-	SomeType& get_top();
-	int get_size() { return Size; };
-	SomeType& operator[](int index);
+	void add_on_pos_right(int index, SomeType data); // Добавляет значение справа
+	void add_on_pos_left(int index, SomeType data);	 // Добавляет значение слева
+	void append(SomeType data);						 // Добавляет значение правее последнего элемента (в конец списка)
+	void add_front(SomeType data);					 // Добавляет значение левее первого элемента (в начало списка)
+	void pop_element(int index);					 // Удаляет элемент по нужному адресу
+	void pop_top();									 // Удаляет Начальный (Head) элемент списка
+	void pop_low();									 // Удаляет Конечный (Tail) элемент списка
+	SomeType& get_low();							 // Передаёт ссылку на поле data Конечного элемента
+	SomeType& get_top();							 // Передаёт ссылку на поле data Начального элемента
+	int get_size() { return Size; };				 // Возвращает размер списка
+	SomeType& operator[](int index);				 // Оператор индексирования для обращения к полю data нужных элементов
 	
 
 };
+
 template<typename SomeType>
 void List<SomeType>::add_first(SomeType data)
 {
@@ -328,17 +329,6 @@ SomeType& List<SomeType>::operator[](int index)
 	}
 };
 
-template<typename SomeType>
-List<SomeType>& Copy(List<SomeType>* OldList)
-{
-	List<SomeType>* NewList = new List<SomeType>;
-	for (int i = 0; i < OldList.get_size(); i++)
-	{
-		NewList->append(OldList.get_low());
-	}
-}
-
-
 
 // Matrix
 
@@ -352,12 +342,12 @@ public:
 	List<int> LI;
 	List<int> LJ;
 	int Size;
-	CCS_Matrix();
-	void Input(List<int> InputList, int Size);
-	int get(int i, int j);
-	void set(int i, int j, int data);
-	int get_size() { return this->Size; }
-	void Shift();
+	CCS_Matrix();								
+	void Input(List<int> InputList, int Size);	// Передаёт введённые значения в объект
+	int get(int i, int j);						// Возвращает значение в нужных строках и столбцах матрицы
+	void set(int i, int j, int data);			// Позволяет поменять значение в нужных строках и столбцах
+	int get_size() { return this->Size; }		// Возвращает размер матрицы
+	void Shift();								// Сдвигает элементы матрицы на 1 вправо
 	
 };
 
@@ -416,15 +406,16 @@ void CCS_Matrix::set(int i, int j, int data)
 	int N1 = LJ[j - 1];
 	int N2 = LJ[j];
 	bool flag;
-	if (data == 0)
+	if (data == 0)		// Равносильно тому, что нам нужно удалить информацию из матрицы в данной позиции
 	{
+		if (N1 == N2) // Это означает что элементов в данном столбце так и так не имеется
+		{
+			return;
+		}
 		for (int counter = N1; counter < N2; counter++)
 		{
-			if (N1 == N2) 
-			{
-				return;
-			}
-			if (LI[counter] == i) 
+			
+			if (LI[counter] == i) // Если нужный элемент на нужном месте найден, то мы удаляем всю информацию о нём:
 			{
 				this->Data.pop_element(counter);
 				this->LI.pop_element(counter);
@@ -440,7 +431,7 @@ void CCS_Matrix::set(int i, int j, int data)
 		}	
 		
 	}
-	if (N1 == N2 && N2 != 0) 
+	if (N1 == N2 && N2 != 0) // Ситуация, когда нам нужно добавить элемент на нужную строку, но элементов в столбце нет:
 	{
 		Data.add_on_pos_right(N2 - 1, data);
 		LI.add_on_pos_right(N2 - 1, i);
@@ -451,7 +442,7 @@ void CCS_Matrix::set(int i, int j, int data)
 		return;
 	}
 	flag = false;
-	for (int counter = N1; counter < N2; counter ++) 
+	for (int counter = N1; counter < N2; counter ++)  // Стандартная ситуация, когда нам нужно поменять элемент, который уже имеет значение:
 	{
 		if (LI[counter] == i) 
 		{
@@ -460,7 +451,7 @@ void CCS_Matrix::set(int i, int j, int data)
 			return;
 		}
 	}
-	if (flag == false) 
+	if (flag == false)								// Если нужный нам элемент не найден, тоесть нулевой, то:
 	{
 		if (i == this->Size && j == this->Size) 
 		{
@@ -474,7 +465,7 @@ void CCS_Matrix::set(int i, int j, int data)
 		}
 		for (int counter = N1; counter < N2; counter ++) 
 		{
-			if (LI[counter] > i) 
+			if (LI[counter] > i)
 			{
 				LI.add_on_pos_left(counter, i);
 				Data.add_on_pos_left(counter, data);
@@ -496,13 +487,15 @@ void CCS_Matrix::Shift()
 	int N2 = this->LJ[this->LJ.get_size() - 1];
 	int Data_buffer;
 	int LI_buffer;
-	for (int counter = N2 - 1; counter >= N1; counter--) 
+	for (int counter = N2 - 1; counter >= N1; counter--) // Чтобы сдвинуть матрицу на 1 вправо, нам нужно:
 	{
-		Data_buffer = this->Data.get_low();
-		this->Data.add_front(Data_buffer);
+		Data_buffer = this->Data.get_low();				 // Переместить элементы последнего столбца в начало в списке Data
+		this->Data.add_front(Data_buffer);				
 		this->Data.pop_low();
 
-		LI_buffer = this->LI.get_low();
+		LI_buffer = this->LI.get_low();					 // Переместить элементы, указывающие на информацию в списке Data, 
+														 // находящиеся в LI, также в начало, и увеличить их на 1, учитывая, что
+														 // мы должны добавлять в LI элементы, значение которых <= размера матрицы 
 		
 		if (LI_buffer == this->Size) 
 		{
@@ -516,11 +509,11 @@ void CCS_Matrix::Shift()
 	}
 	int differences_buffer;
 	List<int> differences;
-	for (int column = this->Size; column > 0; column--) 
-	{
-		differences.add_front(this->LJ[column] - this->LJ[column - 1]);
-		this->LJ.pop_low();
-	}
+	for (int column = this->Size; column > 0; column--)						
+	{																		
+		differences.add_front(this->LJ[column] - this->LJ[column - 1]);		// Разница в двух крайних элементах списка LJ == количеству элементов в столбце,
+		this->LJ.pop_low();													// поэтому проще создать список из этих разниц, добавить значения туда,
+	}																		// переставить последний элемент в начало и заново собрать список LJ
 	
 	differences_buffer = differences.get_low();
 	differences.pop_low();
@@ -550,11 +543,17 @@ int main()
 		for (int j = 0; j < size; j++)
 		{
 			cin >> buffer;
+			if ((int)buffer - 48 > 9 || (int)buffer - 48 < 0)	//Защита от дурака
+			{
+				cout << "Invalid data input!";
+				return -1;
+			}
 			DataList.append((int)buffer - 48);
 		}
-		cout << endl;
-	}
 
+	}
+	
+	cout << endl;
 	cout << "Your DataList:" << endl;
 
 
@@ -568,24 +567,6 @@ int main()
 
 	cout << endl;
 
-	for (int counter = 0; counter < NewMa.Data.get_size(); counter++)
-	{
-		cout << NewMa.Data[counter];
-	}
-	cout << endl;
-
-	for (int counter = 0; counter < NewMa.LI.get_size(); counter++)
-	{
-		cout << NewMa.LI[counter];
-	}
-	cout << endl;
-
-	for (int counter = 0; counter < NewMa.LJ.get_size(); counter++)
-	{
-		cout << NewMa.LJ[counter];
-	}
-	cout << endl;
-
 	cout << "Output Matrix:" << endl;
 	for (int i = 1; i <= size; i++)
 	{
@@ -596,30 +577,10 @@ int main()
 		cout << endl;
 	}
 
-	
-	
 
 	NewMa.Shift();
 
 
-	cout << endl;
-
-	for (int counter = 0; counter < NewMa.Data.get_size(); counter++ ) 
-	{
-		cout << NewMa.Data[counter];
-	}
-	cout << endl;
-
-	for (int counter = 0; counter < NewMa.LI.get_size(); counter++)
-	{
-		cout << NewMa.LI[counter];
-	}
-	cout << endl;
-
-	for (int counter = 0; counter < NewMa.LJ.get_size(); counter++)
-	{
-		cout << NewMa.LJ[counter];
-	}
 	cout << endl;
 	cout << "Output Matrix:" << endl;
 	for (int i = 1; i <= size; i++)

@@ -351,31 +351,33 @@ SomeType& List<SomeType>::operator[](int index)
 
 // Matrix
 
-
+template<typename SomeType>
 class CCS_Matrix
 {
 private:
 	
 public:
-	List<int> Data;
+	List<SomeType> Data;
 	List<int> LI;
 	List<int> LJ;
 	int Size;
 	CCS_Matrix();								
-	void Input(List<int> InputList, int Size);	// Передаёт введённые значения в объект
-	int get(int i, int j);						// Возвращает значение в нужных строках и столбцах матрицы
-	void set(int i, int j, int data);			// Позволяет поменять значение в нужных строках и столбцах
+	void Input(List<SomeType> InputList, int Size);	// Передаёт введённые значения в объект
+	SomeType get(int i, int j);						// Возвращает значение в нужных строках и столбцах матрицы
+	void set(int i, int j, SomeType data);			// Позволяет поменять значение в нужных строках и столбцах
 	int get_size() { return this->Size; }		// Возвращает размер матрицы
 	void Shift();								// Сдвигает элементы матрицы на 1 вправо
 	
 };
 
-CCS_Matrix::CCS_Matrix()
+template<typename SomeType>
+CCS_Matrix<SomeType>::CCS_Matrix()
 {
 	Size = 0;
 };
 
-void CCS_Matrix::Input(List<int> InputList, int Size) 
+template<typename SomeType>
+void CCS_Matrix<SomeType>::Input(List<SomeType> InputList, int Size) 
 {
 	int Column_Index = 0;
 	int current_stroke = 1;
@@ -402,7 +404,8 @@ void CCS_Matrix::Input(List<int> InputList, int Size)
 	LJ.append(Column_Index);
 };
 
-int CCS_Matrix::get(int i, int j) 
+template<typename SomeType>
+SomeType CCS_Matrix<SomeType>::get(int i, int j) 
 {
 	
 	int AA = 0;
@@ -420,7 +423,8 @@ int CCS_Matrix::get(int i, int j)
 	return AA;
 }
 
-void CCS_Matrix::set(int i, int j, int data)
+template<typename SomeType>
+void CCS_Matrix<SomeType>::set(int i, int j, SomeType data)
 {
 	int N1 = LJ[j - 1];
 	int N2 = LJ[j];
@@ -498,7 +502,8 @@ void CCS_Matrix::set(int i, int j, int data)
 	}
 }
 
-void CCS_Matrix::Shift()
+template<typename SomeType>
+void CCS_Matrix<SomeType>::Shift()
 {
 	int N1 = this->LJ[this->LJ.get_size() - 2];
 	int N2 = this->LJ[this->LJ.get_size() - 1];
@@ -550,7 +555,7 @@ int main()
 	cout << "Enter your matrix size (x*x) : ";
 	cin >> size;
 
-	List<int> DataList;
+	List<char> DataList;
 
 	cout << "Input Your Data:" << endl;
 
@@ -560,12 +565,12 @@ int main()
 		for (int j = 0; j < size; j++)
 		{
 			cin >> buffer;
-			if ((int)buffer - 48 > 9 || (int)buffer - 48 < 0)	//Защита от дурака
-			{
-				cout << "Invalid data input!";
-				return -1;
-			}
-			DataList.append((int)buffer - 48);
+			//if ((int)buffer - 48 > 9 || (int)buffer - 48 < 0)	//Защита от дурака
+			//{
+			//	cout << "Invalid data input!";
+			//	return -1;
+			//}
+			DataList.append(buffer);
 		}
 
 	}
@@ -579,7 +584,7 @@ int main()
 		cout << DataList[i];
 	}
 
-	CCS_Matrix NewMa;
+	CCS_Matrix<char> NewMa;
 	NewMa.Input(DataList, size);
 
 	cout << endl;

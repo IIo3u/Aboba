@@ -35,6 +35,7 @@ private:
 public:
 	
 	List();
+	~List();
 	
 	void add_on_pos_right(int index, SomeType data); // Добавляет значение справа
 	void add_on_pos_left(int index, SomeType data);	 // Добавляет значение слева
@@ -50,6 +51,24 @@ public:
 	
 
 };
+
+
+template<typename SomeType>
+List<SomeType>::~List()
+{
+	if (this->Size != 0)
+	{
+
+		Node<SomeType>* Previous = this->Head;
+		Node<SomeType>* Current = nullptr;
+		while (Current != nullptr)
+		{
+			Current = Previous->NextAddress;
+			delete Previous;
+		}
+		delete Current;
+	}
+}
 
 template<typename SomeType>
 void List<SomeType>::add_first(SomeType data)
@@ -475,10 +494,8 @@ void CCS_Matrix::set(int i, int j, int data)
 				}
 				return;
 			}
-		}
-		
+		}	
 	}
-	
 }
 
 void CCS_Matrix::Shift()
